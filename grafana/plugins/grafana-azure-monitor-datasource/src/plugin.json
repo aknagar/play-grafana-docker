@@ -1,0 +1,62 @@
+{
+  "type": "datasource",
+  "name": "Azure Monitor",
+  "id": "grafana-azure-monitor-datasource",
+
+  "info": {
+    "description": "Grafana data source for Azure Monitor/Application Insights",
+    "author": {
+      "name": "Grafana Labs",
+      "url": "https://grafana.com"
+    },
+    "keywords": ["azure", "monitor", "Application Insights"],
+    "logos": {
+      "small": "img/logo.jpg",
+      "large": "img/logo.jpg"
+    },
+    "links": [
+      {"name": "Project site", "url": "https://github.com/grafana/azure-monitor-datasource"},
+      {"name": "Apache License", "url": "https://github.com/grafana/azure-monitor-datasource/blob/master/LICENSE"}
+    ],
+    "screenshots": [
+      {"name": "Azure Contoso Loans", "path": "img/contoso_loans_grafana_dashboard.png"},
+      {"name": "Azure Monitor Network", "path": "img/azure_monitor_network.png"},
+      {"name": "Azure Monitor CPU", "path": "img/azure_monitor_cpu.png"}
+    ],
+    "version": "0.0.9",
+    "updated": "2017-10-24"
+  },
+
+  "routes": [
+    {
+      "path": "azuremonitor",
+      "method": "GET",
+      "url": "https://management.azure.com",
+      "tokenAuth": {
+        "url": "https://login.microsoftonline.com/{{.JsonData.tenantId}}/oauth2/token",
+        "params": {
+          "grant_type":  "client_credentials",
+          "client_id": "{{.JsonData.clientId}}",
+          "client_secret": "{{.SecureJsonData.clientSecret}}",
+          "resource": "https://management.azure.com/"
+        }
+      }
+    },
+    {
+      "path": "appinsights",
+      "method": "GET",
+      "url": "https://api.applicationinsights.io",
+      "headers": [
+        {"name": "X-API-Key", "content": "{{.SecureJsonData.appInsightsApiKey}}"}
+      ]
+    }
+  ],
+
+  "dependencies": {
+    "grafanaVersion": "4.5.x",
+    "plugins": [ ]
+  },
+
+  "metrics": true,
+  "annotations": false
+}
